@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from database import get_db
 from models import Task
 from schemas import TaskCreate, TaskUpdate, TaskResponse
-from typing import List
+from typing import List, Optional
 from security import get_current_user
 
 router = APIRouter()
@@ -17,8 +17,20 @@ def create_task(task: TaskCreate, db: Session = Depends(get_db), current_user: s
     return new_task
 
 @router.get("/tasks", response_model=List[TaskResponse])
-def get_tasks(db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
-    return db.query(Task).filter(Task.is_deleted == False).all()
+def get_tasks(
+    completed: Optional[bool] = None,
+    page: int = 1,
+    limit: int = 10,
+    db: Session = Depends(get_db),
+    current_user: str = Depends(get_current_user)
+):
+    query = db.query(Task).filter(Task.is_deleted == False)
+    
+    if completed is not None:
+        query = query.filter(Task.completed == completed)
+    
+    offset = (page - 1) * limit
+    return query.offset(offset).limit(limit).all()
 
 @router.get("/tasks/deleted", response_model=List[TaskResponse])
 def get_deleted_tasks(db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
@@ -55,3 +67,17 @@ def delete_task(task_id: int, db: Session = Depends(get_db), current_user: str =
     db.commit()
     db.refresh(task)
     return task
+
+@router.get("/stats")
+def get_stats(db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
+    total = db.query(Task).filter(Task.is_deleted == False).count()
+    completed = db.query(Task).filter(Task.completed == True, Task.is_deleted == False).count()
+    deleted = db.query(Task).filter(Task.is_deleted == True).count()
+    pending = total - completed
+    
+    return {
+        "total_tasks": total,
+        "completed": completed,
+        "pending": pending,
+        "deleted": deleted
+    }
