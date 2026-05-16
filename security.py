@@ -3,9 +3,13 @@ from jose import JWTError , jwt
 from datetime import datetime,timedelta,timezone
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
+
+SECRET_KEY = os.getenv("SECRET_KEY")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
-SECRET_KEY = "meghana-hello-998878"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
