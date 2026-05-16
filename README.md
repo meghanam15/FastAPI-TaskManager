@@ -59,7 +59,7 @@ Task Manager API/
 ## Setup & Installation
 
 ```bash
-git clone <your-repo-url>
+git clone <https://github.com/meghanam15/FastAPI-TaskManager>
 cd task-manager-api
 python -m venv venv
 venv\Scripts\activate
