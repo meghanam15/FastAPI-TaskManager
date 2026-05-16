@@ -23,7 +23,7 @@ https://fastapi-taskmanager.onrender.com/docs
 
 ---
 
-## Features
+## Features 
 
 - User registration and login
 - JWT token-based authentication
