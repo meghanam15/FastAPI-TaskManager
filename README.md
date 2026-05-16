@@ -3,6 +3,8 @@
 A production-ready REST API built with FastAPI for managing tasks with full authentication and authorization.
 
 ---
+## Live API
+https://fastapi-taskmanager.onrender.com/docs
 
 ## Tech Stack
 
