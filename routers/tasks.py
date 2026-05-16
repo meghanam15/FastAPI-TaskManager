@@ -1,21 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from database import SessionLocal
+from database import get_db
 from models import Task
 from schemas import TaskCreate, TaskUpdate, TaskResponse
 from typing import List
+from security import get_current_user
 
 router = APIRouter()
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
 @router.post("/tasks", response_model=TaskResponse)
-def create_task(task: TaskCreate, db: Session = Depends(get_db)):
+def create_task(task: TaskCreate, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
     new_task = Task(**task.model_dump())
     db.add(new_task)
     db.commit()
@@ -23,25 +17,25 @@ def create_task(task: TaskCreate, db: Session = Depends(get_db)):
     return new_task
 
 @router.get("/tasks", response_model=List[TaskResponse])
-def get_tasks(db: Session = Depends(get_db)):
+def get_tasks(db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
     return db.query(Task).filter(Task.is_deleted == False).all()
 
-@router.get("/tasks/deleted",response_model=List[TaskResponse])
-def get_deletedtask(db : Session = Depends(get_db)):
+@router.get("/tasks/deleted", response_model=List[TaskResponse])
+def get_deleted_tasks(db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
     tasks = db.query(Task).filter(Task.is_deleted == True).all()
     if not tasks:
-        raise HTTPException(status_code=404,detail="no tasks deleted")
+        raise HTTPException(status_code=404, detail="No tasks deleted")
     return tasks
 
 @router.get("/tasks/{task_id}", response_model=TaskResponse)
-def get_task(task_id: int, db: Session = Depends(get_db)):
+def get_task(task_id: int, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
     task = db.query(Task).filter(Task.id == task_id, Task.is_deleted == False).first()
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     return task
 
-@router.put("/tasks/{task_id}",response_model=TaskResponse)
-def update_task(task_id: int ,task: TaskUpdate , db: Session = Depends(get_db)):
+@router.put("/tasks/{task_id}", response_model=TaskResponse)
+def update_task(task_id: int, task: TaskUpdate, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
     task_data = db.query(Task).filter(Task.id == task_id, Task.is_deleted == False).first()
     if not task_data:
         raise HTTPException(status_code=404, detail="Task not found")
@@ -52,14 +46,12 @@ def update_task(task_id: int ,task: TaskUpdate , db: Session = Depends(get_db)):
     db.refresh(task_data)
     return task_data
 
-@router.delete("/tasks/{task_id}",response_model=TaskResponse)
-def delete_task(task_id : int , db : Session = Depends(get_db)):
+@router.delete("/tasks/{task_id}", response_model=TaskResponse)
+def delete_task(task_id: int, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
     task = db.query(Task).filter(Task.id == task_id, Task.is_deleted == False).first()
     if not task:
-        raise HTTPException(status_code=404,detail = "Task not found")
+        raise HTTPException(status_code=404, detail="Task not found")
     task.is_deleted = True
     db.commit()
     db.refresh(task)
     return task
-
-
