@@ -1,6 +1,7 @@
-# Task Manager REST API
+# Task Manager REST API — Smart Study Tracker
 
-A production-ready REST API built with FastAPI for managing tasks with full authentication and authorization.
+A production-ready REST API built with FastAPI to track study tasks and learning progress.
+Built as a personal learning project by a fresher actively upskilling for a Python Backend role.
 
 ---
 ## Live API
@@ -37,6 +38,15 @@ https://fastapi-taskmanager.onrender.com/docs
 - Protected routes (401 if no valid token)
 - Environment variables for secrets
 - Swagger UI for interactive API testing
+
+## How I Use This
+
+I use this API to track my own study roadmap:
+- Each task = a topic I need to learn
+- Mark completed when done
+- /stats shows my overall progress
+- Soft delete = topics I've deprioritized
+- Filter by completed=false to see what's pending next
 
 ---
 
