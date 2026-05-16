@@ -121,4 +121,4 @@ Visit Swagger UI at: `http://127.0.0.1:8000/docs`
 
 ## Author
 
-Meghana — MCA Graduate | Python Backend Developer
+Meghana M — MCA Graduate | Python Backend Developer
