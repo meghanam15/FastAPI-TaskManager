@@ -51,9 +51,14 @@ def update_task(task_id: int, task: TaskUpdate, db: Session = Depends(get_db), c
     task_data = db.query(Task).filter(Task.id == task_id, Task.is_deleted == False).first()
     if not task_data:
         raise HTTPException(status_code=404, detail="Task not found")
-    task_data.title = task.title or task_data.title
-    task_data.description = task.description or task_data.description
-    task_data.completed = task.completed or task_data.completed
+    
+    if task.title is not None:
+        task_data.title = task.title
+    if task.description is not None:
+        task_data.description = task.description
+    if task.completed is not None:
+        task_data.completed = task.completed
+    
     db.commit()
     db.refresh(task_data)
     return task_data
