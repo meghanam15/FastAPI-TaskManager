@@ -1,7 +1,7 @@
 # Task Manager REST API — Smart Study Tracker
 
 A production-ready REST API built with FastAPI to track study tasks and learning progress.
-Built as a personal learning project by a fresher actively upskilling for a Python Backend role.
+
 
 ---
 ## Live API
