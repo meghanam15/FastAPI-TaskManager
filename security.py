@@ -28,15 +28,15 @@ def create_access_token(data: dict):
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 def verify_token(token: str):
-    payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-    return payload
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid or expired token")
 
 def get_current_user(token: str = Depends(oauth2_scheme)):
-    try:
-        payload = verify_token(token)
-        username = payload.get("sub")
-        if username is None:
-            raise HTTPException(status_code=401, detail="Invalid token")
-        return username
-    except JWTError:
+    payload = verify_token(token)
+    username = payload.get("sub")
+    if username is None:
         raise HTTPException(status_code=401, detail="Invalid token")
+    return username

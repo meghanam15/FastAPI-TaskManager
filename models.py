@@ -11,6 +11,7 @@ class Task(Base):
     completed = Column(Boolean, default=False)
     is_deleted = Column(Boolean, default=False)
     created_at = Column(DateTime, default=func.now())
+    owner_username = Column(String, nullable=False)  
 
 class User(Base):
     __tablename__ = "users"

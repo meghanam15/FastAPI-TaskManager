@@ -17,6 +17,7 @@ class TaskResponse(BaseModel):
     description: Optional[str]
     completed: bool
     created_at: datetime
+    owner_username: Optional[str] = None
 
     class Config:
         from_attributes = True
