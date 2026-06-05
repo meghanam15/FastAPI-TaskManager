@@ -1,134 +1,94 @@
-# Task Manager REST API — Smart Study Tracker
+# 🚀 Task Manager REST API
 
-A production-ready REST API built with FastAPI to track study tasks and learning progress.
+A production-ready REST API built with FastAPI to manage study tasks, track learning progress, and practice backend engineering concepts.
 
+## 🌐 Live Demo
 
----
-## Live API
 https://fastapi-taskmanager.onrender.com/docs
 
-## Tech Stack
+## 🛠 Tech Stack
 
-| Technology | Purpose |
-|------------|---------|
-| FastAPI | Web framework |
-| SQLite | Database |
-| SQLAlchemy | ORM |
-| Pydantic | Data validation |
-| python-jose | JWT token creation & verification |
-| Passlib + Bcrypt | Password hashing |
-| OAuth2 Password Flow | Authentication standard |
-| python-dotenv | Environment variable management |
-| Uvicorn | ASGI server |
-| Python 3.12 | Language |
+* FastAPI
+* SQLAlchemy
+* SQLite
+* Pydantic
+* JWT Authentication
+* OAuth2 Password Flow
+* Passlib + Bcrypt
+* Uvicorn
+* Python 3.12
 
----
+## ✨ Features
 
-## Features 
+* User Registration & Login
+* JWT Authentication
+* OAuth2 Authorization Flow
+* Password Hashing with Bcrypt
+* CRUD Operations for Tasks
+* User-Scoped Data Isolation
+* Soft Delete Functionality
+* Pagination & Filtering
+* Task Analytics (`/stats`)
+* Protected Routes
+* Interactive Swagger Documentation
 
-- User registration and login
-- JWT token-based authentication
-- OAuth2 password flow
-- Password hashing with bcrypt (never stored as plain text)
-- Full CRUD operations for tasks
-- Soft delete (data preserved, not permanently removed)
-- Filter tasks by completion status
-- Pagination support
-- `/stats` endpoint for task summary
-- Protected routes (401 if no valid token)
-- Environment variables for secrets
-- Swagger UI for interactive API testing
+## 📂 Project Structure
 
-## How I Use This
-
-I use this API to track my own study roadmap:
-- Each task = a topic I need to learn
-- Mark completed when done
-- /stats shows my overall progress
-- Soft delete = topics I've deprioritized
-- Filter by completed=false to see what's pending next
-
----
-
-## Project Structure
-
-```
+```text
 Task Manager API/
-├── main.py           # App entry point
-├── database.py       # DB connection and session
-├── models.py         # SQLAlchemy models
-├── schemas.py        # Pydantic schemas
-├── security.py       # JWT + password hashing
-├── .env              # Secret keys (not pushed)
-├── requirements.txt
+├── main.py
+├── database.py
+├── models.py
+├── schemas.py
+├── security.py
 └── routers/
-    ├── tasks.py      # Task routes
-    └── auth.py       # Auth routes
+    ├── auth.py
+    └── tasks.py
 ```
 
----
-
-## Setup & Installation
+## ⚡ Quick Start
 
 ```bash
-git clone <https://github.com/meghanam15/FastAPI-TaskManager>
-cd task-manager-api
-python -m venv venv
-venv\Scripts\activate
+git clone https://github.com/meghanam15/FastAPI-TaskManager.git
+
+cd FastAPI-TaskManager
+
 pip install -r requirements.txt
-```
 
-Create a `.env` file in the root folder:
-```
-SECRET_KEY=your-secret-key-here
-```
-
-Run the development server:
-```bash
 uvicorn main:app --reload
 ```
 
-Visit Swagger UI at: `http://127.0.0.1:8000/docs`
+Create a `.env` file:
 
----
+```env
+SECRET_KEY=your-secret-key
+```
 
-## API Endpoints
+Visit:
 
-### Auth
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| POST | /auth/register | Register a new user | No |
-| POST | /auth/login | Login and receive JWT token | No |
+```text
+http://127.0.0.1:8000/docs
+```
+
+## 📌 API Endpoints
+
+### Authentication
+
+* POST `/auth/register`
+* POST `/auth/login`
 
 ### Tasks
-| Method | Endpoint | Description | Auth Required |
-|--------|----------|-------------|---------------|
-| GET | /tasks | Get all tasks (filtering + pagination) | Yes |
-| POST | /tasks | Create a new task | Yes |
-| GET | /tasks/{id} | Get a specific task by ID | Yes |
-| PUT | /tasks/{id} | Update a task | Yes |
-| DELETE | /tasks/{id} | Soft delete a task | Yes |
-| GET | /tasks/deleted | View all soft-deleted tasks | Yes |
-| GET | /stats | Get task statistics | Yes |
 
-### Query Parameters for GET /tasks
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| completed | bool | Filter by completion status |
-| page | int | Page number (default: 1) |
-| limit | int | Results per page (default: 10) |
+* GET `/tasks`
+* POST `/tasks`
+* GET `/tasks/{id}`
+* PUT `/tasks/{id}`
+* DELETE `/tasks/{id}`
+* GET `/tasks/deleted`
+* GET `/stats`
 
----
+## 👩‍💻 Author
 
-## How Authentication Works
+Meghana M
 
-1. Register via `/auth/register`
-2. Login via `/auth/login` — receive a JWT token
-3. Pass token in every request header: `Authorization: Bearer <token>`
-4. All task routes are protected — invalid or missing token returns 401
-
----
-
-## Author
-
-Meghana M — MCA Graduate | Python Backend Developer
+Python Backend Developer | FastAPI | REST APIs
