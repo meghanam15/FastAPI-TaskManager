@@ -1,6 +1,7 @@
 # 🚀 Task Manager REST API
 
-A production-ready REST API built with FastAPI to manage study tasks, track learning progress, and practice backend engineering concepts.
+A production-ready REST API built with FastAPI featuring JWT authentication, 
+user-scoped task management, pagination, filtering, analytics, and automated testing.
 
 ## 🌐 Live Demo
 https://fastapi-taskmanager.onrender.com/docs
