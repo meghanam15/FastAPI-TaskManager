@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, DateTime , Enum
 from sqlalchemy.sql import func
 from database import Base
+from enums import PriorityEnum
 
 class Task(Base):
     __tablename__ = "tasks"
@@ -11,7 +12,8 @@ class Task(Base):
     completed = Column(Boolean, default=False)
     is_deleted = Column(Boolean, default=False)
     created_at = Column(DateTime, default=func.now())
-    owner_username = Column(String, nullable=False)  
+    owner_username = Column(String, nullable=False) 
+    priority = Column(Enum(PriorityEnum), default=PriorityEnum.Medium, nullable=False) 
 
 class User(Base):
     __tablename__ = "users"

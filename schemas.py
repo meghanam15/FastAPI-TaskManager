@@ -1,15 +1,18 @@
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
+from enums import PriorityEnum
 
 class TaskCreate(BaseModel):
     title: str
     description: Optional[str] = None
+    priority : PriorityEnum
 
 class TaskUpdate(BaseModel):
     title: Optional[str] = None
     description: Optional[str] = None
     completed: Optional[bool] = None
+    priority : PriorityEnum
 
 class TaskResponse(BaseModel):
     id: int
@@ -18,6 +21,7 @@ class TaskResponse(BaseModel):
     completed: bool
     created_at: datetime
     owner_username: Optional[str] = None
+    priority : PriorityEnum
 
     class Config:
         from_attributes = True

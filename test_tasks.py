@@ -63,12 +63,13 @@ def test_create_task():
     })
     token = login_response.json()["access_token"]
     response = client.post("/tasks",
-        json={"title": "Test Task", "description": "Testing"},
+        json={"title": "Test Task", "description": "Testing", "priority": "low"},
         headers={"Authorization": f"Bearer {token}"}
     )
     assert response.status_code == 200
     assert response.json()["title"] == "Test Task"
     assert response.json()["owner_username"] == "testuser"
+    assert response.json()["priority"] == "low"
 
 def test_get_tasks():
     client.post("/auth/register", json={
@@ -76,16 +77,36 @@ def test_get_tasks():
         "email": "test2@example.com",
         "password": "testpass123"
     })
+
     login_response = client.post("/auth/login", data={
         "username": "test2@example.com",
         "password": "testpass123"
     })
+
     token = login_response.json()["access_token"]
-    response = client.get("/tasks",
+
+    # Create a task first
+    client.post(
+        "/tasks",
+        json={
+            "title": "Task1",
+            "description": "Testing",
+            "priority": "low"
+        },
         headers={"Authorization": f"Bearer {token}"}
     )
+
+    # Fetch tasks
+    response = client.get(
+        "/tasks",
+        headers={"Authorization": f"Bearer {token}"}
+    )
+
     assert response.status_code == 200
     assert isinstance(response.json(), list)
+    assert len(response.json()) == 1
+    assert response.json()[0]["title"] == "Task1"
+    assert response.json()[0]["priority"] == "low"
 
 def test_user_scoping():
     # User 1 creates a task
@@ -100,7 +121,7 @@ def test_user_scoping():
     })
     token1 = login1.json()["access_token"]
     client.post("/tasks",
-        json={"title": "User1 Task", "description": "Private"},
+        json={"title": "User1 Task", "description": "Private" , "priority": "high"},
         headers={"Authorization": f"Bearer {token1}"}
     )
 
@@ -119,3 +140,29 @@ def test_user_scoping():
         headers={"Authorization": f"Bearer {token2}"}
     )
     assert response.json() == []
+
+def test_invalid_priority():
+    client.post("/auth/register", json={
+        "username": "testuser",
+        "email": "test@example.com",
+        "password": "testpass123"
+    })
+
+    login = client.post("/auth/login", data={
+        "username": "test@example.com",
+        "password": "testpass123"
+    })
+
+    token = login.json()["access_token"]
+
+    response = client.post(
+        "/tasks",
+        json={
+            "title": "Invalid",
+            "description": "Testing",
+            "priority": "urgent"
+        },
+        headers={"Authorization": f"Bearer {token}"}
+    )
+
+    assert response.status_code == 422
